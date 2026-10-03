@@ -68,7 +68,7 @@ export class InvoiceChangeRequestsService {
 
   /**
    * Create a change request for an invoice (Section 11)
-   * Sales/Inventory submit, Admin reviews
+   * Sales/Inventory/Admin submit, Admin reviews
    */
   async create(invoiceId: number, employeeId: number, data: CreateInvoiceChangeRequestInput, idempotencyKey?: string) {
     // Verify invoice exists
