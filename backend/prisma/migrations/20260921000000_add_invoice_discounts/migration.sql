@@ -1,0 +1,3 @@
+ALTER TABLE "Invoice"
+  ADD COLUMN IF NOT EXISTS "discountPercentage" DECIMAL(18,2),
+  ADD COLUMN IF NOT EXISTS "discountAmount" DECIMAL(18,2);

@@ -1,0 +1,26 @@
+import { AppErrorCode } from './error-codes';
+
+export const ERROR_MESSAGES: Record<AppErrorCode, string> = {
+  [AppErrorCode.VALIDATION_ERROR]: 'Please fill in all required fields.',
+  [AppErrorCode.INVALID_CREDENTIALS]: 'Invalid credentials. Please try again.',
+  [AppErrorCode.ACCOUNT_INACTIVE]: 'Your account is currently inactive. Please contact support.',
+  [AppErrorCode.TOKEN_EXPIRED]: 'Your session has expired. Please sign in again.',
+  [AppErrorCode.FORBIDDEN_ROLE]: 'You do not have permission to perform this action.',
+  [AppErrorCode.EMAIL_ALREADY_EXISTS]: 'This email is already in use. Try another one.',
+  [AppErrorCode.USERNAME_ALREADY_EXISTS]: 'This username is already in use. Try another one.',
+  [AppErrorCode.NOT_FOUND]: 'The requested item could not be found.',
+  [AppErrorCode.CONFLICT]: 'This item already exists. Try another one.',
+  [AppErrorCode.UNAUTHORIZED]: 'You are not authorized to perform this action.',
+  [AppErrorCode.INTERNAL_SERVER_ERROR]: 'Something went wrong. Please try again shortly.',
+  [AppErrorCode.CONNECTION_ERROR]: "We're having trouble connecting. Please try again shortly.",
+  [AppErrorCode.QR_TOKEN_INVALID]: 'This QR code is not valid. Please scan the QR on the workplace screen.',
+  [AppErrorCode.QR_TOKEN_EXPIRED]: 'This QR code has expired. Please scan the new QR code.',
+  [AppErrorCode.QR_ACTION_MISMATCH]: 'This QR code cannot be used for this action.',
+  [AppErrorCode.QR_WORKPLACE_MISMATCH]: 'This QR code is not valid for this workplace.',
+  [AppErrorCode.ALREADY_CHECKED_IN]: 'You have already checked in.',
+  [AppErrorCode.NOT_CHECKED_IN]: 'You have no open attendance to check out.',
+  [AppErrorCode.KIOSK_NOT_CONFIGURED]: 'This kiosk is not assigned to a workplace.',
+  [AppErrorCode.RATE_LIMITED]: 'Too many attempts. Please wait a moment and try again.',
+  [AppErrorCode.INVALID_QUANTITY]: 'Quantity must be a positive number.',
+  [AppErrorCode.FRACTIONAL_QUANTITY_NOT_ALLOWED]: 'This product is counted in pieces, so the quantity must be a whole number.',
+};

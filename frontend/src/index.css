@@ -1,0 +1,909 @@
+@import "tailwindcss";
+
+/* ==========================================================================
+   DESIGN TOKENS v3 — single source of truth.
+   Components consume tokens ONLY. Name tokens by ROLE, never by color.
+
+   Identity: soft indigo brand on cool lavender-tinted neutrals.
+   Every solid fill passes WCAG AA (>= 4.5:1) with its on-color text, and every
+   text-role color passes AA on its surface (surface, base and muted).
+   Elevation (dark): the higher the surface, the lighter it is.
+   ========================================================================== */
+:root {
+  color-scheme: light;
+
+  /* ── Surfaces ── */
+  --bg-base: #f6f7fb;
+  --bg-muted: #eef0f6;
+  --bg-surface: #ffffff;
+  --bg-elevated: #ffffff;
+  --bg-hover: rgba(23, 27, 46, 0.045);
+  --bg-active: rgba(23, 27, 46, 0.085);
+
+  /* ── Text ── */
+  --text-primary: #171b2e;
+  --text-secondary: #575d75;
+  --text-disabled: rgba(87, 93, 117, 0.5);
+  --text-inverse: #ffffff;
+
+  /* ── Borders ── */
+  --border-subtle: rgba(23, 27, 46, 0.1);
+  --border-strong: rgba(23, 27, 46, 0.2);
+
+  /* ── Brand: soft indigo ── */
+  --brand: #4354eb;              /* text / icons on light surfaces */
+  --brand-fill: #4f5bc4;         /* solid buttons, active states   */
+  --brand-fill-hover: #4550b0;
+  --brand-bg: rgba(79, 91, 196, 0.1);
+  --on-brand: #ffffff;
+
+  /* ── Danger: rose ── */
+  --accent: #b0324a;
+  --accent-fill: #c8415a;
+  --accent-fill-hover: #b03650;
+  --accent-bg: rgba(200, 65, 90, 0.1);
+  --on-accent: #ffffff;
+
+  /* ── Success: emerald ── */
+  --mint: #17694a;
+  --mint-fill: #1c7f57;
+  --mint-fill-hover: #166847;
+  --mint-bg: rgba(28, 127, 87, 0.1);
+  --on-mint: #ffffff;
+
+  /* ── Warning: amber ── */
+  --peach: #8a4f00;
+  --peach-fill: #a45f00;
+  --peach-fill-hover: #8f5300;
+  --peach-bg: rgba(217, 140, 20, 0.13);
+  --on-peach: #ffffff;
+
+  /* ── Info: sky (distinct from brand so it never reads as "primary action") ── */
+  --info: #1a5f99;
+  --info-fill: #2470b3;
+  --info-bg: rgba(36, 112, 179, 0.1);
+
+  /* ── Semantic aliases (role names) ── */
+  --success: var(--mint);
+  --warning: var(--peach);
+  --danger: var(--accent);
+  --success-bg: var(--mint-bg);
+  --warning-bg: var(--peach-bg);
+  --danger-bg: var(--accent-bg);
+
+  /* ── Data-viz series ── */
+  --chart-1: #5560c9;
+  --chart-2: #1c9a7a;
+  --chart-3: #e0902a;
+  --chart-4: #d0507a;
+  --chart-5: #2b86c5;
+  --chart-6: #8a63c9;
+
+  /* ── Interaction states ── */
+  --overlay: rgba(15, 18, 34, 0.42);
+  --row-hover: rgba(79, 91, 196, 0.055);
+  --row-selected: rgba(79, 91, 196, 0.12);
+  --disabled: var(--text-disabled);
+  --focus-ring: #4f5bc4;
+  --selection-bg: rgba(79, 91, 196, 0.22);
+
+  /* ── Elevation: ink-tinted, layered, soft ── */
+  --shadow-sm: 0 1px 2px rgba(23, 27, 46, 0.06);
+  --shadow-md: 0 2px 4px rgba(23, 27, 46, 0.04), 0 8px 20px rgba(23, 27, 46, 0.08);
+  --shadow-lg: 0 4px 8px rgba(23, 27, 46, 0.05), 0 20px 44px rgba(23, 27, 46, 0.14);
+
+  /* ── Legacy aliases — pass-throughs to role tokens ── */
+  --surface: var(--bg-base);
+  --surface-subtle: var(--bg-muted);
+  --surface-2: var(--bg-muted);
+  --background: var(--bg-base);
+  --card: var(--bg-surface);
+  --ink: var(--text-primary);
+  --soft: var(--text-secondary);
+  --muted: var(--text-secondary);
+  --text: var(--text-primary);
+  --border: var(--border-subtle);
+
+  /* ── Print palette: paper is always light, never themed ── */
+  --print-ink: #171b2e;
+  --print-muted: #575d75;
+  --print-line: #d5d9e4;
+  --print-line-soft: #e6e9f0;
+  --print-head-bg: #eef0f6;
+  --print-zebra: #f7f8fb;
+
+  /* Kiosk screens are wall-mounted displays that are always dark, so this
+     mini-palette is intentionally NOT overridden by [data-theme="dark"]. */
+  --kiosk-bg: #0b0d12;
+  --kiosk-card: #ffffff;
+  --kiosk-card-ink: #171b2e;
+  --kiosk-card-soft: #575d75;
+  --kiosk-card-field: #f6f7fb;
+  --kiosk-brand: #4f5bc4;
+  --kiosk-danger-bg: #fee2e2;
+  --kiosk-danger-ink: #991b1b;
+  --kiosk-line: rgba(255, 255, 255, 0.15);
+  --kiosk-line-soft: rgba(255, 255, 255, 0.65);
+  --kiosk-accent-red: #f87171;
+  --kiosk-accent-blue: #93c5fd;
+
+  /* Spacing scale (4px base) */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-8: 32px;
+
+  /* Controls & shape */
+  --control-h: 40px;
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+
+  /* Layout */
+  --page-pad-x: 16px;
+  --page-pad-y: 16px;
+  --content-max: 1600px;
+  --section-gap: 20px;
+}
+
+/* ==========================================================================
+   DARK THEME — the ONLY place dark values are defined.
+   Indigo-tinted slate base (never pure black), off-white text, lifted brand
+   and semantic TEXT colors, deeper FILL colors so white on-colors stay AA.
+   ========================================================================== */
+[data-theme="dark"] {
+  color-scheme: dark;
+
+  /* Surfaces (4-step elevation ladder) */
+  --bg-base: #0e1120;
+  --bg-muted: #141829;
+  --bg-surface: #1a1f33;
+  --bg-elevated: #222840;
+  --bg-hover: rgba(255, 255, 255, 0.055);
+  --bg-active: rgba(255, 255, 255, 0.09);
+
+  /* Text */
+  --text-primary: #e9ebf5;
+  --text-secondary: #a6adc8;
+  --text-disabled: rgba(166, 173, 200, 0.42);
+  --text-inverse: #0e1120;
+
+  /* Borders */
+  --border-subtle: rgba(255, 255, 255, 0.08);
+  --border-strong: rgba(255, 255, 255, 0.16);
+
+  /* Brand */
+  --brand: #8a96ff;
+  --brand-fill: #5560c9;
+  --brand-fill-hover: #4650b5;
+  --brand-bg: rgba(120, 132, 235, 0.18);
+  --on-brand: #ffffff;
+
+  /* Danger */
+  --accent: #ff6988;
+  --accent-fill: #b83a54;
+  --accent-fill-hover: #a53049;
+  --accent-bg: rgba(225, 95, 125, 0.18);
+  --on-accent: #ffffff;
+
+  /* Success */
+  --mint: #6fd3a5;
+  --mint-fill: #1b7a54;
+  --mint-fill-hover: #166747;
+  --mint-bg: rgba(60, 180, 130, 0.17);
+  --on-mint: #ffffff;
+
+  /* Warning */
+  --peach: #f0b95a;
+  --peach-fill: #965a00;
+  --peach-fill-hover: #804d00;
+  --peach-bg: rgba(230, 160, 50, 0.17);
+  --on-peach: #ffffff;
+
+  /* Info */
+  --info: #7cc0f0;
+  --info-fill: #22679f;
+  --info-bg: rgba(80, 160, 230, 0.17);
+
+  /* Data-viz series — lifted for dark surfaces */
+  --chart-1: #8a94f0;
+  --chart-2: #4fd1ad;
+  --chart-3: #f2b25c;
+  --chart-4: #ee7fa5;
+  --chart-5: #6cb6ee;
+  --chart-6: #b596ec;
+
+  /* Interaction states */
+  --overlay: rgba(5, 7, 14, 0.66);
+  --row-hover: rgba(255, 255, 255, 0.045);
+  --row-selected: rgba(138, 148, 240, 0.16);
+  --focus-ring: #a5adf5;
+  --selection-bg: rgba(165, 173, 245, 0.3);
+
+  /* Elevation: deeper, not lighter */
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4);
+  --shadow-md: 0 2px 4px rgba(0, 0, 0, 0.3), 0 8px 20px rgba(0, 0, 0, 0.42);
+  --shadow-lg: 0 4px 8px rgba(0, 0, 0, 0.35), 0 20px 44px rgba(0, 0, 0, 0.55);
+}
+
+@media (min-width: 640px) {
+  :root {
+    --page-pad-x: 24px;
+    --page-pad-y: 24px;
+  }
+}
+
+/* Touch devices get bigger hit areas (44px = Apple/WCAG target guidance) */
+@media (pointer: coarse) {
+  :root {
+    --control-h: 44px;
+  }
+}
+
+/* ==========================================================================
+   BASE
+   ========================================================================== */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  scrollbar-gutter: stable;
+}
+
+::selection {
+  background-color: var(--selection-bg);
+}
+
+/* Theme switch transition — scoped to the switch only (added/removed by
+   useTheme) so we never pay for a permanent global transition. */
+html.theme-switching,
+html.theme-switching *,
+html.theme-switching *::before,
+html.theme-switching *::after {
+  transition:
+    background-color 180ms ease,
+    border-color 180ms ease,
+    color 180ms ease !important;
+}
+
+/* Sun/moon swap in the theme toggle — re-triggered with a key on change */
+@keyframes theme-icon-pop {
+  from {
+    opacity: 0;
+    transform: rotate(-70deg) scale(0.65);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.theme-icon {
+  animation: theme-icon-pop 240ms cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* Respect reduced-motion everywhere, not only during theme switch */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+body {
+  font-family: 'Manrope', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  background-color: var(--bg-base);
+  color: var(--text-primary);
+  line-height: 1.55;
+  margin: 0;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* Arabic: its own font stack and a taller line-height (Arabic has diacritics
+   and deep descenders — 1.55 feels cramped). */
+html[lang="ar"] body {
+  font-family: 'Noto Sans Arabic', 'Tajawal', 'Manrope', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  line-height: 1.7;
+}
+
+/* Arabic letters JOIN. Any letter-spacing breaks the joins and makes the text
+   look broken, so it is forced off for Arabic. */
+html[lang="ar"] *,
+html[lang="ar"] *::before,
+html[lang="ar"] *::after {
+  letter-spacing: 0 !important;
+}
+
+/* Typography */
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Sora', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  color: var(--text-primary);
+  text-wrap: balance;
+}
+
+html[lang="ar"] h1,
+html[lang="ar"] h2,
+html[lang="ar"] h3,
+html[lang="ar"] h4,
+html[lang="ar"] h5,
+html[lang="ar"] h6 {
+  font-family: 'Noto Sans Arabic', 'Tajawal', 'Sora', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  line-height: 1.4;
+}
+
+/* RTL Support */
+html[dir="rtl"] {
+  text-align: start;
+}
+
+/* Tabular numerals for money, counts, invoice numbers */
+.tabular-nums {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Money / codes / phone numbers inside Arabic text: keep digits in LTR order
+   and isolated so the bidi algorithm never shuffles "1,250.00 ج.م". */
+.money,
+.ltr-num {
+  direction: ltr;
+  unicode-bidi: isolate;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Focus: visible for keyboard users, invisible for mouse clicks */
+:focus-visible {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: 2px;
+}
+
+.focus-ring:focus-visible {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: 2px;
+}
+
+/* Native checkboxes / radios / range follow the brand */
+input[type="checkbox"],
+input[type="radio"],
+input[type="range"],
+progress {
+  accent-color: var(--brand-fill);
+}
+
+/* ==========================================================================
+   APP LAYOUT UTILITIES
+   ========================================================================== */
+.page-container {
+  width: 100%;
+  max-width: var(--content-max);
+  margin-inline: auto;
+}
+
+/* Filter / action toolbar — single consistent pattern */
+.toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: var(--space-3);
+  margin-bottom: var(--space-4);
+}
+
+.toolbar > .toolbar-grow {
+  flex: 1 1 200px;
+  min-width: 0;
+}
+
+.toolbar > .toolbar-fixed {
+  flex: 0 0 auto;
+  width: 160px;
+}
+
+.toolbar > .toolbar-fixed-wide {
+  flex: 0 0 auto;
+  width: 200px;
+}
+
+/* Vertical stack with consistent section gap */
+.stack {
+  display: flex;
+  flex-direction: column;
+  gap: var(--section-gap);
+}
+
+/* Responsive form / KPI grid */
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: var(--space-3);
+}
+
+.form-grid-wide {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: var(--space-4);
+}
+
+.page-section {
+  margin-bottom: var(--section-gap);
+}
+
+/* Compact empty/loading states — no huge dead zones */
+.state-block {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: var(--space-8) var(--space-4);
+  color: var(--text-secondary);
+}
+
+/* ==========================================================================
+   FORM CONTROLS — one shared look, all states covered
+   ========================================================================== */
+input[type="text"],
+input[type="search"],
+input[type="number"],
+input[type="email"],
+input[type="tel"],
+input[type="url"],
+input[type="password"],
+input[type="date"],
+input[type="datetime-local"],
+select,
+textarea {
+  font-family: inherit;
+  font-size: 14px;
+  color: var(--text-primary);
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-sm);
+  min-height: var(--control-h);
+  padding: 8px 12px;
+  outline: none;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease, background-color 0.15s ease;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* Hover: subtle darkening so the field feels interactive */
+input:where([type="text"], [type="search"], [type="number"], [type="email"], [type="tel"], [type="url"], [type="password"], [type="date"], [type="datetime-local"]):hover:not(:disabled):not(:focus),
+select:hover:not(:disabled):not(:focus),
+textarea:hover:not(:disabled):not(:focus) {
+  border-color: color-mix(in srgb, var(--text-primary) 32%, transparent);
+}
+
+input[type="text"]:focus,
+input[type="search"]:focus,
+input[type="number"]:focus,
+input[type="email"]:focus,
+input[type="tel"]:focus,
+input[type="url"]:focus,
+input[type="password"]:focus,
+input[type="date"]:focus,
+input[type="datetime-local"]:focus,
+select:focus,
+textarea:focus {
+  border-color: var(--brand-fill);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--brand-fill) 22%, transparent);
+}
+
+/* Validation */
+input[aria-invalid="true"],
+select[aria-invalid="true"],
+textarea[aria-invalid="true"] {
+  border-color: var(--danger);
+}
+
+input[aria-invalid="true"]:focus,
+select[aria-invalid="true"]:focus,
+textarea[aria-invalid="true"]:focus {
+  border-color: var(--danger);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--danger) 22%, transparent);
+}
+
+/* Disabled / read-only */
+input:disabled,
+select:disabled,
+textarea:disabled {
+  background-color: var(--bg-muted);
+  color: var(--text-disabled);
+  cursor: not-allowed;
+}
+
+input[readonly],
+textarea[readonly] {
+  background-color: var(--bg-muted);
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: color-mix(in srgb, var(--text-secondary) 70%, transparent);
+}
+
+/* Browser autofill keeps our surface instead of yellow/blue flash */
+input:-webkit-autofill,
+input:-webkit-autofill:focus {
+  -webkit-text-fill-color: var(--text-primary);
+  caret-color: var(--text-primary);
+  box-shadow: 0 0 0 1000px var(--bg-surface) inset;
+}
+
+/* Native date inputs: consistent height in RTL */
+input[type="date"],
+input[type="datetime-local"] {
+  min-height: var(--control-h);
+}
+
+/* iOS zooms into any input under 16px — prevent it on phones */
+@media (max-width: 639px) {
+  input[type="text"],
+  input[type="search"],
+  input[type="number"],
+  input[type="email"],
+  input[type="tel"],
+  input[type="url"],
+  input[type="password"],
+  input[type="date"],
+  input[type="datetime-local"],
+  select,
+  textarea {
+    font-size: 16px;
+  }
+}
+
+/* ==========================================================================
+   SCROLLBARS — thin and quiet
+   ========================================================================== */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--border-strong) transparent;
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border-strong);
+  border-radius: 999px;
+  border: 2px solid transparent;
+  background-clip: content-box;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--text-secondary);
+  background-clip: content-box;
+}
+
+/* ==========================================================================
+   OPT-IN COMPONENTS (new, safe names — nothing existing is affected)
+   ========================================================================== */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 2px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.6;
+  white-space: nowrap;
+  background: var(--bg-muted);
+  color: var(--text-secondary);
+}
+.badge-brand   { background: var(--brand-bg);   color: var(--brand); }
+.badge-success { background: var(--success-bg); color: var(--success); }
+.badge-warning { background: var(--warning-bg); color: var(--warning); }
+.badge-danger  { background: var(--danger-bg);  color: var(--danger); }
+.badge-info    { background: var(--info-bg);    color: var(--info); }
+
+/* Loading placeholder — calmer than a spinner for tables and cards */
+@keyframes shimmer {
+  from { background-position: 200% 0; }
+  to   { background-position: -200% 0; }
+}
+
+.skeleton {
+  border-radius: var(--radius-sm);
+  background: linear-gradient(90deg, var(--bg-muted) 25%, var(--bg-hover) 37%, var(--bg-muted) 63%);
+  background-size: 400% 100%;
+  animation: shimmer 1.6s ease-in-out infinite;
+}
+
+/* Spinner animation */
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* ==========================================================================
+   PRINTING — one unified block (replaces the old print.css as well)
+   Paper is always light: dark-theme tokens are re-pointed to light values so
+   a user printing from dark mode never gets dark cards or pale text.
+   ========================================================================== */
+.print-only {
+  display: none;
+}
+
+@media print {
+  @page {
+    size: A4 portrait;
+    margin: 15mm 12mm 18mm 12mm;
+
+    @bottom-center {
+      content: counter(page) " / " counter(pages);
+      font-size: 9px;
+      color: #8a90a5;
+      font-family: 'Manrope', sans-serif;
+    }
+  }
+
+  /* Force light tokens even if the app is in dark mode */
+  html[data-theme="dark"] {
+    color-scheme: light;
+    --bg-base: #ffffff;
+    --bg-muted: #f3f4f8;
+    --bg-surface: #ffffff;
+    --bg-elevated: #ffffff;
+    --text-primary: #171b2e;
+    --text-secondary: #575d75;
+    --border-subtle: rgba(23, 27, 46, 0.1);
+    --border-strong: rgba(23, 27, 46, 0.18);
+    --brand: #3f49b0;
+    --accent: #b0324a;
+    --mint: #17694a;
+    --peach: #8a4f00;
+    --info: #1a5f99;
+    --brand-bg: rgba(79, 91, 196, 0.1);
+    --accent-bg: rgba(200, 65, 90, 0.1);
+    --mint-bg: rgba(28, 127, 87, 0.1);
+    --peach-bg: rgba(217, 140, 20, 0.13);
+    --info-bg: rgba(36, 112, 179, 0.1);
+    --row-hover: transparent;
+    --row-selected: transparent;
+    --shadow-sm: none;
+    --shadow-md: none;
+    --shadow-lg: none;
+  }
+
+  /* Print exactly what is on screen, colors and backgrounds included.
+     Without this Chrome drops background-painted content unless the user
+     ticks "Background graphics" manually. */
+  * {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+    color-adjust: exact !important;
+  }
+
+  html,
+  body {
+    background: #fff !important;
+    color: var(--print-ink) !important;
+    font-size: 11px !important;
+    line-height: 1.45 !important;
+  }
+
+  /* Hide app chrome, reveal only the print-area subtree */
+  aside,
+  header,
+  .no-print {
+    display: none !important;
+  }
+
+  body * {
+    visibility: hidden;
+  }
+
+  .print-area,
+  .print-area * {
+    visibility: visible;
+  }
+
+  .print-area {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    padding: 16px !important;
+  }
+
+  /* Reset layout offsets so print content uses the full page */
+  .lg\:ms-64,
+  [class*="ms-64"] {
+    margin-inline-start: 0 !important;
+  }
+
+  main,
+  .reports-layout {
+    padding: 0 !important;
+  }
+
+  .print-only {
+    display: block !important;
+  }
+
+  /* Arabic joins + uppercase have no meaning on paper either */
+  html[lang="ar"] .print-area * {
+    letter-spacing: 0 !important;
+    text-transform: none !important;
+  }
+
+  /* ─── Company branding header ─── */
+  .print-area .print-only {
+    margin-bottom: 16px !important;
+  }
+
+  .print-area .print-only h1 {
+    font-size: 20px !important;
+    color: var(--print-ink) !important;
+  }
+
+  .print-area .print-only h2 {
+    font-size: 17px !important;
+    color: var(--print-ink) !important;
+  }
+
+  /* ─── KPI grid & cards ─── */
+  .kpi-grid {
+    grid-template-columns: repeat(3, 1fr) !important;
+  }
+
+  .print-area .kpi-card {
+    break-inside: avoid;
+    page-break-inside: avoid;
+    box-shadow: none !important;
+    border: 1px solid var(--print-line) !important;
+    border-radius: 8px !important;
+    padding: 14px 16px !important;
+  }
+
+  .print-area .kpi-card p:first-child {
+    font-size: 10px !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.06em !important;
+    color: var(--print-muted) !important;
+  }
+
+  .print-area .kpi-card p:last-of-type {
+    font-size: 22px !important;
+    margin-top: 6px !important;
+    color: var(--print-ink) !important;
+  }
+
+  /* ─── Cards ─── */
+  .print-area .ui-card {
+    box-shadow: none !important;
+    border: 1px solid var(--print-line) !important;
+    border-radius: 8px !important;
+    overflow: visible !important;
+  }
+
+  /* ─── Tables ─── */
+  .print-area table {
+    width: 100% !important;
+    border-collapse: collapse !important;
+    font-size: 11px !important;
+    margin-top: 8px !important;
+  }
+
+  .print-area thead {
+    display: table-header-group !important;
+  }
+
+  .print-area thead tr,
+  .print-area th {
+    background: var(--print-head-bg) !important;
+  }
+
+  .print-area th {
+    font-size: 10px !important;
+    font-weight: 700 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.04em !important;
+    color: var(--print-ink) !important;
+    border-top: 1px solid var(--print-line) !important;
+    border-bottom: 2px solid var(--print-line) !important;
+    padding: 7px 10px !important;
+  }
+
+  .print-area td {
+    border-bottom: 1px solid var(--print-line-soft) !important;
+    padding: 6px 10px !important;
+    color: var(--print-ink) !important;
+    vertical-align: middle !important;
+  }
+
+  .print-area tbody {
+    display: table-row-group !important;
+  }
+
+  .print-area tbody tr:nth-child(even) {
+    background-color: var(--print-zebra) !important;
+  }
+
+  .print-area tbody tr:nth-child(odd) {
+    background-color: #fff !important;
+  }
+
+  .print-area tbody tr:hover {
+    background-color: inherit !important;
+  }
+
+  /* Never split a row / card / KPI across pages; repeat table header */
+  tr,
+  .card,
+  .kpi-card,
+  .audit-detail-card,
+  .ui-table-tr,
+  .ui-table td,
+  .ui-table th {
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+
+  .ui-table thead {
+    display: table-header-group;
+  }
+
+  /* Pagination is meaningless on paper */
+  .print-area nav {
+    display: none !important;
+  }
+
+  /* ─── Page footer with company info ─── */
+  .print-area::after {
+    content: var(--print-company, none);
+    display: block;
+    clear: both;
+    margin-top: 14px;
+    padding-top: 6px;
+    border-top: 1px solid var(--print-line-soft);
+    text-align: center;
+    font-size: 9px;
+    color: var(--print-muted);
+    font-family: "Manrope", "Cairo", Arial, sans-serif;
+  }
+
+  /* ─── RTL print support ─── */
+  html[dir="rtl"] .print-area th,
+  html[dir="rtl"] .print-area td {
+    text-align: right !important;
+  }
+
+  html[dir="rtl"] .print-area th[align="right"],
+  html[dir="rtl"] .print-area td[align="right"] {
+    text-align: left !important;
+  }
+
+  h2,
+  h3 {
+    page-break-after: avoid !important;
+  }
+
+  img {
+    page-break-inside: avoid !important;
+  }
+
+  .tab-content {
+    display: block !important;
+  }
+
+  .tab-content[hidden] {
+    display: none !important;
+  }
+}

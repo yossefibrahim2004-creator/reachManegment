@@ -1,0 +1,90 @@
+[31m[Nest] 21780  - [39m09/23/2026, 12:40:16 AM [31m  ERROR[39m [38;5;3m[GlobalExceptionFilter] [39m[31mGET /api/notifications/unread-count -> 401 VALIDATION_ERROR[39m
+[31m[Nest] 21780  - [39m09/23/2026, 12:40:16 AM [31m  ERROR[39m [38;5;3m[GlobalExceptionFilter] [39m[31mUnauthorizedException: Unauthorized
+    at JwtAuthGuard.handleRequest (D:\rich_mangment\backend\node_modules\@nestjs\passport\dist\auth.guard.js:60:30)
+    at D:\rich_mangment\backend\node_modules\@nestjs\passport\dist\auth.guard.js:44:124
+    at D:\rich_mangment\backend\node_modules\@nestjs\passport\dist\auth.guard.js:83:24
+    at allFailed (D:\rich_mangment\backend\node_modules\passport\lib\middleware\authenticate.js:110:18)
+    at attempt (D:\rich_mangment\backend\node_modules\passport\lib\middleware\authenticate.js:183:28)
+    at strategy.fail (D:\rich_mangment\backend\node_modules\passport\lib\middleware\authenticate.js:314:9)
+    at JwtStrategy.authenticate (D:\rich_mangment\backend\node_modules\passport-jwt\lib\strategy.js:96:21)
+    at attempt (D:\rich_mangment\backend\node_modules\passport\lib\middleware\authenticate.js:378:16)
+    at authenticate (D:\rich_mangment\backend\node_modules\passport\lib\middleware\authenticate.js:379:7)
+    at D:\rich_mangment\backend\node_modules\@nestjs\passport\dist\auth.guard.js:88:3[39m
+GlobalExceptionFilter
+[31m[Nest] 21780  - [39m09/23/2026, 12:40:16 AM [31m  ERROR[39m [38;5;3m[GlobalExceptionFilter] [39m[31mGET /api/dashboard -> 401 VALIDATION_ERROR[39m
+[31m[Nest] 21780  - [39m09/23/2026, 12:40:16 AM [31m  ERROR[39m [38;5;3m[GlobalExceptionFilter] [39m[31mUnauthorizedException: Unauthorized
+    at JwtAuthGuard.handleRequest (D:\rich_mangment\backend\node_modules\@nestjs\passport\dist\auth.guard.js:60:30)
+    at D:\rich_mangment\backend\node_modules\@nestjs\passport\dist\auth.guard.js:44:124
+    at D:\rich_mangment\backend\node_modules\@nestjs\passport\dist\auth.guard.js:83:24
+    at allFailed (D:\rich_mangment\backend\node_modules\passport\lib\middleware\authenticate.js:110:18)
+    at attempt (D:\rich_mangment\backend\node_modules\passport\lib\middleware\authenticate.js:183:28)
+    at strategy.fail (D:\rich_mangment\backend\node_modules\passport\lib\middleware\authenticate.js:314:9)
+    at JwtStrategy.authenticate (D:\rich_mangment\backend\node_modules\passport-jwt\lib\strategy.js:96:21)
+    at attempt (D:\rich_mangment\backend\node_modules\passport\lib\middleware\authenticate.js:378:16)
+    at authenticate (D:\rich_mangment\backend\node_modules\passport\lib\middleware\authenticate.js:379:7)
+    at D:\rich_mangment\backend\node_modules\@nestjs\passport\dist\auth.guard.js:88:3[39m
+GlobalExceptionFilter
+[31m[Nest] 21780  - [39m09/23/2026, 12:40:16 AM [31m  ERROR[39m [38;5;3m[GlobalExceptionFilter] [39m[31mGET /api/dashboard/activity -> 401 VALIDATION_ERROR[39m
+[31m[Nest] 21780  - [39m09/23/2026, 12:40:16 AM [31m  ERROR[39m [38;5;3m[GlobalExceptionFilter] [39m[31mUnauthorizedException: Unauthorized
+    at JwtAuthGuard.handleRequest (D:\rich_mangment\backend\node_modules\@nestjs\passport\dist\auth.guard.js:60:30)
+    at D:\rich_mangment\backend\node_modules\@nestjs\passport\dist\auth.guard.js:44:124
+    at D:\rich_mangment\backend\node_modules\@nestjs\passport\dist\auth.guard.js:83:24
+    at allFailed (D:\rich_mangment\backend\node_modules\passport\lib\middleware\authenticate.js:110:18)
+    at attempt (D:\rich_mangment\backend\node_modules\passport\lib\middleware\authenticate.js:183:28)
+    at strategy.fail (D:\rich_mangment\backend\node_modules\passport\lib\middleware\authenticate.js:314:9)
+    at JwtStrategy.authenticate (D:\rich_mangment\backend\node_modules\passport-jwt\lib\strategy.js:96:21)
+    at attempt (D:\rich_mangment\backend\node_modules\passport\lib\middleware\authenticate.js:378:16)
+    at authenticate (D:\rich_mangment\backend\node_modules\passport\lib\middleware\authenticate.js:379:7)
+    at D:\rich_mangment\backend\node_modules\@nestjs\passport\dist\auth.guard.js:88:3[39m
+GlobalExceptionFilter
+[31m[Nest] 21780  - [39m09/23/2026, 12:40:16 AM [31m  ERROR[39m [38;5;3m[GlobalExceptionFilter] [39m[31mGET /api/notifications/unread-count -> 401 VALIDATION_ERROR[39m
+[31m[Nest] 21780  - [39m09/23/2026, 12:40:16 AM [31m  ERROR[39m [38;5;3m[GlobalExceptionFilter] [39m[31mUnauthorizedException: Unauthorized
+    at JwtAuthGuard.handleRequest (D:\rich_mangment\backend\node_modules\@nestjs\passport\dist\auth.guard.js:60:30)
+    at D:\rich_mangment\backend\node_modules\@nestjs\passport\dist\auth.guard.js:44:124
+    at D:\rich_mangment\backend\node_modules\@nestjs\passport\dist\auth.guard.js:83:24
+    at allFailed (D:\rich_mangment\backend\node_modules\passport\lib\middleware\authenticate.js:110:18)
+    at attempt (D:\rich_mangment\backend\node_modules\passport\lib\middleware\authenticate.js:183:28)
+    at strategy.fail (D:\rich_mangment\backend\node_modules\passport\lib\middleware\authenticate.js:314:9)
+    at JwtStrategy.authenticate (D:\rich_mangment\backend\node_modules\passport-jwt\lib\strategy.js:96:21)
+    at attempt (D:\rich_mangment\backend\node_modules\passport\lib\middleware\authenticate.js:378:16)
+    at authenticate (D:\rich_mangment\backend\node_modules\passport\lib\middleware\authenticate.js:379:7)
+    at D:\rich_mangment\backend\node_modules\@nestjs\passport\dist\auth.guard.js:88:3[39m
+GlobalExceptionFilter
+[31m[Nest] 21780  - [39m09/23/2026, 12:40:16 AM [31m  ERROR[39m [38;5;3m[GlobalExceptionFilter] [39m[31mGET /api/dashboard -> 401 VALIDATION_ERROR[39m
+[31m[Nest] 21780  - [39m09/23/2026, 12:40:16 AM [31m  ERROR[39m [38;5;3m[GlobalExceptionFilter] [39m[31mUnauthorizedException: Unauthorized
+    at JwtAuthGuard.handleRequest (D:\rich_mangment\backend\node_modules\@nestjs\passport\dist\auth.guard.js:60:30)
+    at D:\rich_mangment\backend\node_modules\@nestjs\passport\dist\auth.guard.js:44:124
+    at D:\rich_mangment\backend\node_modules\@nestjs\passport\dist\auth.guard.js:83:24
+    at allFailed (D:\rich_mangment\backend\node_modules\passport\lib\middleware\authenticate.js:110:18)
+    at attempt (D:\rich_mangment\backend\node_modules\passport\lib\middleware\authenticate.js:183:28)
+    at strategy.fail (D:\rich_mangment\backend\node_modules\passport\lib\middleware\authenticate.js:314:9)
+    at JwtStrategy.authenticate (D:\rich_mangment\backend\node_modules\passport-jwt\lib\strategy.js:96:21)
+    at attempt (D:\rich_mangment\backend\node_modules\passport\lib\middleware\authenticate.js:378:16)
+    at authenticate (D:\rich_mangment\backend\node_modules\passport\lib\middleware\authenticate.js:379:7)
+    at D:\rich_mangment\backend\node_modules\@nestjs\passport\dist\auth.guard.js:88:3[39m
+GlobalExceptionFilter
+[31m[Nest] 21780  - [39m09/23/2026, 12:40:16 AM [31m  ERROR[39m [38;5;3m[GlobalExceptionFilter] [39m[31mGET /api/dashboard/activity -> 401 VALIDATION_ERROR[39m
+[31m[Nest] 21780  - [39m09/23/2026, 12:40:16 AM [31m  ERROR[39m [38;5;3m[GlobalExceptionFilter] [39m[31mUnauthorizedException: Unauthorized
+    at JwtAuthGuard.handleRequest (D:\rich_mangment\backend\node_modules\@nestjs\passport\dist\auth.guard.js:60:30)
+    at D:\rich_mangment\backend\node_modules\@nestjs\passport\dist\auth.guard.js:44:124
+    at D:\rich_mangment\backend\node_modules\@nestjs\passport\dist\auth.guard.js:83:24
+    at allFailed (D:\rich_mangment\backend\node_modules\passport\lib\middleware\authenticate.js:110:18)
+    at attempt (D:\rich_mangment\backend\node_modules\passport\lib\middleware\authenticate.js:183:28)
+    at strategy.fail (D:\rich_mangment\backend\node_modules\passport\lib\middleware\authenticate.js:314:9)
+    at JwtStrategy.authenticate (D:\rich_mangment\backend\node_modules\passport-jwt\lib\strategy.js:96:21)
+    at attempt (D:\rich_mangment\backend\node_modules\passport\lib\middleware\authenticate.js:378:16)
+    at authenticate (D:\rich_mangment\backend\node_modules\passport\lib\middleware\authenticate.js:379:7)
+    at D:\rich_mangment\backend\node_modules\@nestjs\passport\dist\auth.guard.js:88:3[39m
+GlobalExceptionFilter
+[31m[Nest] 21780  - [39m09/23/2026, 12:45:17 AM [31m  ERROR[39m [38;5;3m[GlobalExceptionFilter] [39m[31mPOST /api/auth/login -> 401 INVALID_CREDENTIALS[39m
+[31m[Nest] 21780  - [39m09/23/2026, 12:45:17 AM [31m  ERROR[39m [38;5;3m[GlobalExceptionFilter] [39m[31mUnauthorizedException: Invalid credentials. Please try again.
+    at AuthService.login (D:\rich_mangment\backend\dist\auth\auth.service.js:31:23)
+    at async D:\rich_mangment\backend\node_modules\@nestjs\core\router\router-execution-context.js:46:28
+    at async D:\rich_mangment\backend\node_modules\@nestjs\core\router\router-proxy.js:9:17[39m
+GlobalExceptionFilter
+[31m[Nest] 21780  - [39m09/23/2026, 12:45:24 AM [31m  ERROR[39m [38;5;3m[GlobalExceptionFilter] [39m[31mPOST /api/auth/login -> 401 INVALID_CREDENTIALS[39m
+[31m[Nest] 21780  - [39m09/23/2026, 12:45:24 AM [31m  ERROR[39m [38;5;3m[GlobalExceptionFilter] [39m[31mUnauthorizedException: Invalid credentials. Please try again.
+    at AuthService.login (D:\rich_mangment\backend\dist\auth\auth.service.js:31:23)
+    at async D:\rich_mangment\backend\node_modules\@nestjs\core\router\router-execution-context.js:46:28
+    at async D:\rich_mangment\backend\node_modules\@nestjs\core\router\router-proxy.js:9:17[39m
+GlobalExceptionFilter

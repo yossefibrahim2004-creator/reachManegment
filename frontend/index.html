@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Pallet POS</title>
+    <!-- Resolve the theme BEFORE first paint so there is never a flash of the
+         wrong theme. Mirrors the logic in src/lib/theme.tsx (keep in sync). -->
+    <script>
+      (function () {
+        var pref = "system";
+        try {
+          var stored = localStorage.getItem("pallet-theme");
+          if (stored === "light" || stored === "dark" || stored === "system") {
+            pref = stored;
+          }
+        } catch (e) {}
+        var resolved =
+          pref === "system"
+            ? window.matchMedia &&
+              window.matchMedia("(prefers-color-scheme: dark)").matches
+              ? "dark"
+              : "light"
+            : pref;
+        document.documentElement.setAttribute("data-theme", resolved);
+      })();
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&family=Sora:wght@500;600;700&family=Noto+Sans+Arabic:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

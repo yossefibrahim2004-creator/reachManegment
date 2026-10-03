@@ -1,0 +1,705 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  ADMIN
+  ACCOUNTANT
+  SALES
+  INVENTORY
+  ATTENDANCE_KIOSK
+}
+
+enum AttendanceStatus {
+  PRESENT
+  LATE
+  ABSENT
+  EARLY_LEAVE
+  OVERTIME
+}
+
+enum ProductUnitStatus {
+  AVAILABLE
+  RESERVED
+  SOLD
+  DAMAGED
+}
+
+enum InvoiceStatus {
+  PENDING_ACCOUNTANT
+  CONFIRMED
+  CANCELLED
+  DELIVERED
+}
+
+enum CogsStatus {
+  PENDING
+  FINAL
+}
+
+enum StockReceiptStatus {
+  PENDING_PRICING
+  PRICED
+  CANCELLED
+}
+
+enum CustomerType {
+  INDIVIDUAL
+  COMPANY
+}
+
+enum ChangeRequestType {
+  EDIT
+  FULL_RETURN
+  PARTIAL_RETURN
+}
+
+enum ChangeRequestStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+enum ChangeRequestItemAction {
+  ADD_ITEM
+  REMOVE_ITEM
+  CHANGE_PRICE
+  RETURN_ITEM
+}
+
+enum InvoiceAuditAction {
+  CREATED
+  SENT_FOR_ACCOUNTANT_REVIEW
+  CONFIRMED
+  REJECTED
+  UNIT_SCANNED
+  UNIT_SCAN_REVERSED
+  DELIVERED
+  STOCK_RESERVED
+  STOCK_RESERVATION_RELEASED
+  PRINTED
+  CHANGE_REQUEST_CREATED
+  CHANGE_REQUEST_APPROVED
+  CHANGE_REQUEST_REJECTED
+  PRICE_ADJUSTED
+  ITEM_ADDED
+  ITEM_RETURNED
+  FULL_RETURNED
+  PARTIAL_RETURNED
+}
+
+enum ProductUnitAuditAction {
+  RECEIVED
+  ALLOCATED_TO_INVOICE
+  ALLOCATION_RELEASED
+  SOLD
+  RETURNED
+  MARKED_DAMAGED
+  RESTORED_AVAILABLE
+}
+
+enum NotificationType {
+  LOW_STOCK
+  CHANGE_REQUEST
+  RETURN_APPROVED
+  RETURN_REJECTED
+  CHANGE_REQUEST_REJECTED
+  PRICE_CHANGE_APPROVED
+  ADD_ITEM_APPROVED
+  ADD_ITEM_REJECTED
+  INVOICE_PENDING_REVIEW
+  INVOICE_REJECTED
+  INVOICE_CONFIRMED
+  DELIVERY_PENDING
+  DELIVERY_OVERDUE
+  STOCK_PENDING_PRICING
+  SYSTEM
+}
+
+enum StockAdjustmentType {
+  DAMAGE
+  LOSS
+  FOUND
+  COUNT_CORRECTION
+  RECEIVING_CORRECTION
+  OTHER
+}
+
+enum AdjustmentReviewStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+enum UnitOfMeasure {
+  PIECE
+  METER
+}
+
+model Category {
+  id            Int           @id @default(autoincrement())
+  name          String
+  isActive      Boolean       @default(true)
+  deletedAt     DateTime?
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+  productModels ProductModel[]
+
+  @@index([isActive])
+}
+
+model ProductModel {
+  id            Int          @id @default(autoincrement())
+  categoryId    Int
+  category      Category     @relation(fields: [categoryId], references: [id], onDelete: Restrict)
+  name          String
+  isSerialized  Boolean      @default(true)
+  unit          UnitOfMeasure @default(PIECE)
+  reservedQuantity Float     @default(0)
+  minStockAlert Float        @default(0)
+  isActive      Boolean      @default(true)
+  deletedAt     DateTime?
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
+  units         ProductUnit[]
+  stockLots     StockLot[]
+  stockAdjustments StockAdjustment[]
+  invoiceItems  InvoiceItem[]
+
+  @@index([categoryId, isActive])
+  @@unique([categoryId, name])
+}
+
+model ProductUnit {
+  id                 Int                      @id @default(autoincrement())
+  productModelId     Int
+  productModel       ProductModel             @relation(fields: [productModelId], references: [id], onDelete: Restrict)
+  barcode            String                   @unique
+  status             ProductUnitStatus        @default(AVAILABLE)
+  receivedDate       DateTime                 @default(now())
+  purchasePrice      Decimal?                 @db.Decimal(18, 2)
+  version            Int                      @default(0)
+  stockReceiptItem   StockReceiptItem?
+  unitAssignments    InvoiceItemUnitAssignment[]
+  returnItems        InvoiceReturnItem[]
+  changeRequestItems InvoiceChangeRequestItem[]
+  auditLogs          ProductUnitAuditLog[]
+
+  @@index([productModelId, status])
+  @@index([status])
+  @@index([barcode])
+}
+
+model Supplier {
+  id        Int           @id @default(autoincrement())
+  name      String
+  phone     String?
+  address   String?
+  isActive  Boolean       @default(true)
+  deletedAt DateTime?
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
+  stockReceipts StockReceipt[]
+  stockLots     StockLot[]
+
+  @@index([name])
+  @@index([isActive])
+}
+
+model StockReceipt {
+  id                Int                @id @default(autoincrement())
+  employeeId        Int
+  employee          Employee           @relation(fields: [employeeId], references: [id], onDelete: Restrict)
+  supplierId        Int
+  supplier          Supplier           @relation(fields: [supplierId], references: [id], onDelete: Restrict)
+  status            StockReceiptStatus @default(PENDING_PRICING)
+  pricedByEmployeeId Int?
+  pricedBy          Employee?          @relation("PricedByEmployee", fields: [pricedByEmployeeId], references: [id], onDelete: Restrict)
+  pricedAt          DateTime?
+  date              DateTime           @default(now())
+  items             StockReceiptItem[]
+  stockLots         StockLot[]
+  createdAt         DateTime           @default(now())
+
+  @@index([date])
+  @@index([employeeId, date])
+  @@index([status])
+}
+
+model StockReceiptItem {
+  id             Int          @id @default(autoincrement())
+  stockReceiptId Int
+  stockReceipt   StockReceipt @relation(fields: [stockReceiptId], references: [id], onDelete: Restrict)
+  productUnitId  Int          @unique
+  productUnit    ProductUnit  @relation(fields: [productUnitId], references: [id], onDelete: Restrict)
+
+  @@index([stockReceiptId])
+}
+
+model StockLot {
+  id                Int             @id @default(autoincrement())
+  productModelId    Int
+  productModel      ProductModel    @relation(fields: [productModelId], references: [id], onDelete: Restrict)
+  stockReceiptId    Int
+  stockReceipt      StockReceipt    @relation(fields: [stockReceiptId], references: [id], onDelete: Restrict)
+  supplierId        Int
+  supplier          Supplier        @relation(fields: [supplierId], references: [id], onDelete: Restrict)
+  quantityReceived  Float
+  quantityRemaining Float
+  quantityReserved  Float           @default(0)
+  purchasePrice     Decimal?        @db.Decimal(18, 2)
+  receivedDate      DateTime        @default(now())
+  createdAt         DateTime        @default(now())
+  updatedAt         DateTime        @updatedAt
+  consumptions      StockConsumption[]
+  adjustments       StockAdjustment[]
+
+  @@index([productModelId])
+  @@index([stockReceiptId])
+  @@index([supplierId])
+}
+
+model StockConsumption {
+  id             Int            @id @default(autoincrement())
+  invoiceItemId  Int
+  invoiceItem    InvoiceItem    @relation(fields: [invoiceItemId], references: [id], onDelete: Restrict)
+  stockLotId     Int
+  stockLot       StockLot       @relation(fields: [stockLotId], references: [id], onDelete: Restrict)
+  quantity       Float
+  unitCost       Decimal?       @db.Decimal(18, 2)
+  totalCost      Decimal?       @db.Decimal(18, 2)
+  createdAt      DateTime       @default(now())
+
+  @@index([invoiceItemId])
+  @@index([stockLotId])
+}
+
+model StockAdjustment {
+  id                   Int                    @id @default(autoincrement())
+  productModelId       Int
+  productModel         ProductModel           @relation(fields: [productModelId], references: [id], onDelete: Restrict)
+  stockLotId           Int?
+  stockLot             StockLot?              @relation(fields: [stockLotId], references: [id], onDelete: Restrict)
+  employeeId           Int
+  employee             Employee               @relation(fields: [employeeId], references: [id], onDelete: Restrict)
+  type                 StockAdjustmentType
+  quantity             Float
+  reason               String
+  status               AdjustmentReviewStatus @default(PENDING)
+  reviewedByEmployeeId Int?
+  reviewedBy           Employee?              @relation("AdjustmentReviewer", fields: [reviewedByEmployeeId], references: [id], onDelete: SetNull)
+  reviewedAt           DateTime?
+  reviewNote           String?
+  createdAt            DateTime               @default(now())
+
+  @@index([productModelId, createdAt])
+  @@index([stockLotId])
+  @@index([employeeId, createdAt])
+  @@index([status, createdAt])
+}
+
+model Customer {
+  id                      Int                   @id @default(autoincrement())
+  name                    String
+  type                    CustomerType
+  phone                   String?
+  isActive                Boolean               @default(true)
+  deletedAt               DateTime?
+  createdAt               DateTime              @default(now())
+  updatedAt               DateTime              @updatedAt
+  invoices                Invoice[]
+  proposedChangeRequests  InvoiceChangeRequest[] @relation("ProposedCustomer")
+
+  @@index([name])
+  @@index([phone])
+  @@index([isActive])
+}
+
+model Invoice {
+  id                     Int                     @id @default(autoincrement())
+  invoiceNumber          String                  @unique
+  customerId             Int
+  customer               Customer                @relation(fields: [customerId], references: [id], onDelete: Restrict)
+  employeeId             Int
+  employee               Employee                @relation(fields: [employeeId], references: [id], onDelete: Restrict)
+  status                 InvoiceStatus           @default(PENDING_ACCOUNTANT)
+  confirmedByEmployeeId  Int?
+  confirmedBy            Employee?               @relation("ConfirmedByEmployee", fields: [confirmedByEmployeeId], references: [id], onDelete: Restrict)
+  confirmedAt            DateTime?
+  rejectedByEmployeeId   Int?
+  rejectedBy             Employee?               @relation("RejectedByEmployee", fields: [rejectedByEmployeeId], references: [id], onDelete: Restrict)
+  rejectedAt             DateTime?
+  rejectionReason        String?
+  deliveredByEmployeeId  Int?
+  deliveredBy            Employee?               @relation("DeliveredByEmployee", fields: [deliveredByEmployeeId], references: [id], onDelete: Restrict)
+  deliveredAt            DateTime?
+  paymentType            String?
+  discountPercentage     Decimal?                @db.Decimal(18, 2)
+  discountAmount         Decimal?                @db.Decimal(18, 2)
+  date                   DateTime                @default(now())
+  originalTotal          Decimal                 @db.Decimal(18, 2)
+  currentTotal           Decimal                 @db.Decimal(18, 2)
+  items                  InvoiceItem[]
+  priceAdjustments       InvoicePriceAdjustment[]
+  returns                InvoiceReturn[]
+  changeRequests         InvoiceChangeRequest[]
+  auditLogs              InvoiceAuditLog[]
+  productUnitAuditLogs   ProductUnitAuditLog[]
+
+  @@index([date])
+  @@index([employeeId, date])
+  @@index([customerId, date])
+  @@index([invoiceNumber])
+  @@index([status])
+}
+
+model InvoiceItem {
+  id                 Int                      @id @default(autoincrement())
+  invoiceId          Int
+  invoice            Invoice                  @relation(fields: [invoiceId], references: [id], onDelete: Restrict)
+  productModelId     Int
+  productModel       ProductModel             @relation(fields: [productModelId], references: [id], onDelete: Restrict)
+  quantity           Float
+  price              Decimal                  @db.Decimal(18, 2)
+  costAtSale         Decimal?                 @db.Decimal(18, 2)
+  cogsStatus         CogsStatus               @default(PENDING)
+  createdAt          DateTime                 @default(now())
+  priceAdjustments   InvoicePriceAdjustment[]
+  returnItems        InvoiceReturnItem[]
+  changeRequestItems InvoiceChangeRequestItem[]
+  consumptions       StockConsumption[]
+  unitAssignments    InvoiceItemUnitAssignment[]
+
+  @@index([invoiceId])
+  @@index([productModelId])
+}
+
+model InvoicePriceAdjustment {
+  id            Int                   @id @default(autoincrement())
+  invoiceId     Int
+  invoice       Invoice               @relation(fields: [invoiceId], references: [id], onDelete: Restrict)
+  invoiceItemId Int
+  invoiceItem   InvoiceItem           @relation(fields: [invoiceItemId], references: [id], onDelete: Restrict)
+  requestedById Int
+  requestedBy   Employee              @relation("PriceAdjustmentRequestedBy", fields: [requestedById], references: [id], onDelete: Restrict)
+  approvedById  Int
+  approvedBy    Employee              @relation("PriceAdjustmentApprovedBy", fields: [approvedById], references: [id], onDelete: Restrict)
+  oldPrice      Decimal               @db.Decimal(18, 2)
+  newPrice      Decimal               @db.Decimal(18, 2)
+  reason        String
+  createdAt     DateTime              @default(now())
+  requestId     Int?
+  request       InvoiceChangeRequest? @relation(fields: [requestId], references: [id], onDelete: Restrict)
+
+  @@index([invoiceId])
+  @@index([invoiceItemId])
+}
+
+model InvoiceReturn {
+  id              Int                  @id @default(autoincrement())
+  invoiceId       Int
+  invoice         Invoice              @relation(fields: [invoiceId], references: [id], onDelete: Restrict)
+  requestedById   Int
+  approvedById    Int
+  reason          String
+  refundTotal     Decimal              @db.Decimal(18, 2)
+  createdAt       DateTime             @default(now())
+  requestId       Int?                 @unique
+  request         InvoiceChangeRequest? @relation(fields: [requestId], references: [id], onDelete: Restrict)
+  items           InvoiceReturnItem[]
+
+  @@index([invoiceId, createdAt])
+}
+
+model InvoiceReturnItem {
+  id              Int             @id @default(autoincrement())
+  invoiceReturnId Int
+  invoiceReturn   InvoiceReturn   @relation(fields: [invoiceReturnId], references: [id], onDelete: Restrict)
+  invoiceItemId   Int
+  invoiceItem     InvoiceItem     @relation(fields: [invoiceItemId], references: [id], onDelete: Restrict)
+  productUnitId   Int?
+  productUnit     ProductUnit?    @relation(fields: [productUnitId], references: [id], onDelete: Restrict)
+  quantity        Float           @default(1)
+  refundAmount    Decimal         @db.Decimal(18, 2)
+
+  @@index([invoiceReturnId])
+  @@index([productUnitId])
+}
+
+model InvoiceChangeRequest {
+  id                    Int                      @id @default(autoincrement())
+  invoiceId             Int
+  invoice               Invoice                  @relation(fields: [invoiceId], references: [id], onDelete: Restrict)
+  requestedByEmployeeId Int
+  requestedBy           Employee                 @relation("RequestedBy", fields: [requestedByEmployeeId], references: [id], onDelete: Restrict)
+  type                  ChangeRequestType
+  reason                String
+  proposedCustomerId    Int?
+  proposedCustomer      Customer?                @relation("ProposedCustomer", fields: [proposedCustomerId], references: [id], onDelete: Restrict)
+  status                ChangeRequestStatus      @default(PENDING)
+  reviewedByAdminId     Int?
+  reviewedBy            Employee?                @relation("ReviewedBy", fields: [reviewedByAdminId], references: [id], onDelete: Restrict)
+  reviewDate            DateTime?
+  adminNote             String?
+  createdAt             DateTime                 @default(now())
+  items                 InvoiceChangeRequestItem[]
+  priceAdjustments      InvoicePriceAdjustment[]
+  invoiceReturn         InvoiceReturn?
+
+  @@index([invoiceId, status])
+  @@index([status, createdAt])
+  @@index([requestedByEmployeeId, createdAt])
+}
+
+model InvoiceChangeRequestItem {
+  id            Int                    @id @default(autoincrement())
+  requestId     Int
+  request       InvoiceChangeRequest   @relation(fields: [requestId], references: [id], onDelete: Restrict)
+  action        ChangeRequestItemAction
+  invoiceItemId Int?
+  invoiceItem   InvoiceItem?           @relation(fields: [invoiceItemId], references: [id], onDelete: Restrict)
+  productUnitId Int?
+  productUnit   ProductUnit?           @relation(fields: [productUnitId], references: [id], onDelete: Restrict)
+  productModelId Int?
+  quantity      Float?
+  proposedPrice Decimal?               @db.Decimal(18, 2)
+  notes         String?
+
+  @@index([requestId])
+  @@index([invoiceItemId])
+  @@index([productUnitId])
+  @@index([productModelId])
+}
+
+model InvoiceItemUnitAssignment {
+  id                    Int          @id @default(autoincrement())
+  invoiceItemId         Int
+  invoiceItem           InvoiceItem  @relation(fields: [invoiceItemId], references: [id], onDelete: Restrict)
+  productUnitId         Int
+  productUnit           ProductUnit  @relation(fields: [productUnitId], references: [id], onDelete: Restrict)
+  scannedByEmployeeId   Int
+  scannedBy             Employee     @relation("ScannedAssignments", fields: [scannedByEmployeeId], references: [id], onDelete: Restrict)
+  scannedAt             DateTime     @default(now())
+  reversedAt            DateTime?
+  reversedByEmployeeId  Int?
+  reversedBy            Employee?    @relation("ReversedAssignments", fields: [reversedByEmployeeId], references: [id], onDelete: Restrict)
+
+  @@index([invoiceItemId])
+  @@index([productUnitId])
+}
+
+model InvoiceAuditLog {
+  id         Int               @id @default(autoincrement())
+  invoiceId  Int
+  invoice    Invoice           @relation(fields: [invoiceId], references: [id], onDelete: Restrict)
+  action     InvoiceAuditAction
+  employeeId Int
+  employee   Employee          @relation(fields: [employeeId], references: [id], onDelete: Restrict)
+  timestamp  DateTime          @default(now())
+  details    Json?
+
+  @@index([invoiceId, timestamp])
+}
+
+model ProductUnitAuditLog {
+  id            Int                    @id @default(autoincrement())
+  productUnitId Int
+  productUnit   ProductUnit            @relation(fields: [productUnitId], references: [id], onDelete: Restrict)
+  action        ProductUnitAuditAction
+  invoiceId     Int?
+  invoice       Invoice?               @relation(fields: [invoiceId], references: [id], onDelete: Restrict)
+  employeeId    Int
+  employee      Employee               @relation(fields: [employeeId], references: [id], onDelete: Restrict)
+  timestamp     DateTime               @default(now())
+  notes         String?
+  metadata      Json?
+
+  @@index([productUnitId, timestamp])
+  @@index([invoiceId])
+}
+
+model SystemAuditLog {
+  id         Int       @id @default(autoincrement())
+  employeeId Int?
+  employee   Employee? @relation(fields: [employeeId], references: [id], onDelete: Restrict)
+  action     String
+  entityType String
+  entityId   String?
+  timestamp  DateTime  @default(now())
+  metadata   Json?
+
+  @@index([entityType, entityId, timestamp])
+  @@index([employeeId, timestamp])
+}
+
+model Workplace {
+  id           Int          @id @default(autoincrement())
+  name         String
+  latitude     Float?
+  longitude    Float?
+  radiusMeters Int          @default(100)
+  isActive     Boolean      @default(true)
+  deletedAt    DateTime?
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
+  employees    Employee[]
+  attendance   Attendance[]
+
+  @@index([isActive])
+  @@index([name])
+}
+
+model Employee {
+  id                        Int                      @id @default(autoincrement())
+  name                      String
+  role                      Role
+  username                  String                   @unique
+  passwordHash              String
+  refreshToken              String?
+  isActive                  Boolean                  @default(true)
+  deletedAt                 DateTime?
+  workplaceId               Int?
+  workplace                 Workplace?                @relation(fields: [workplaceId], references: [id], onDelete: Restrict)
+  createdAt                 DateTime                 @default(now())
+  updatedAt                 DateTime                 @updatedAt
+  kioskAttendance           Attendance[]             @relation("KioskAttendance")
+  stockReceipts             StockReceipt[]
+  pricedReceipts            StockReceipt[]           @relation("PricedByEmployee")
+  invoices                  Invoice[]
+  confirmedInvoices         Invoice[]                @relation("ConfirmedByEmployee")
+  rejectedInvoices          Invoice[]                @relation("RejectedByEmployee")
+  deliveredInvoices         Invoice[]                @relation("DeliveredByEmployee")
+  attendance                Attendance[]
+  expenses                  Expense[]
+  requestedChanges          InvoiceChangeRequest[]   @relation("RequestedBy")
+  reviewedChanges           InvoiceChangeRequest[]   @relation("ReviewedBy")
+  invoiceAuditLogs          InvoiceAuditLog[]
+  productUnitAuditLogs      ProductUnitAuditLog[]
+  systemAuditLogs           SystemAuditLog[]
+  priceAdjustmentsRequested InvoicePriceAdjustment[] @relation("PriceAdjustmentRequestedBy")
+  priceAdjustmentsApproved  InvoicePriceAdjustment[] @relation("PriceAdjustmentApprovedBy")
+  stockAdjustments          StockAdjustment[]
+  reviewedAdjustments       StockAdjustment[]           @relation("AdjustmentReviewer")
+  notifications             Notification[]
+  idempotencyKeys           IdempotencyKey[]
+  scannedAssignments        InvoiceItemUnitAssignment[] @relation("ScannedAssignments")
+  reversedAssignments       InvoiceItemUnitAssignment[] @relation("ReversedAssignments")
+
+  @@index([role, isActive])
+  @@index([username])
+}
+
+model Attendance {
+  id                Int              @id @default(autoincrement())
+  employeeId        Int
+  employee          Employee         @relation(fields: [employeeId], references: [id], onDelete: Restrict)
+  workplaceId       Int?
+  workplace         Workplace?       @relation(fields: [workplaceId], references: [id], onDelete: Restrict)
+  kioskId           Int?
+  kiosk             Employee?        @relation("KioskAttendance", fields: [kioskId], references: [id], onDelete: Restrict)
+  status            AttendanceStatus @default(PRESENT)
+  checkIn           DateTime
+  checkOut          DateTime?
+  date              DateTime         @default(now())
+  checkInLatitude   Float?
+  checkInLongitude  Float?
+  checkOutLatitude  Float?
+  checkOutLongitude Float?
+  createdAt         DateTime         @default(now())
+  updatedAt         DateTime         @updatedAt
+
+  @@index([employeeId, date])
+  @@index([workplaceId, date])
+  @@index([kioskId, date])
+  @@index([status])
+}
+
+model ExpenseCategory {
+  id        Int       @id @default(autoincrement())
+  name      String
+  isActive  Boolean   @default(true)
+  deletedAt DateTime?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  expenses  Expense[]
+
+  @@index([isActive])
+}
+
+model Expense {
+  id          Int              @id @default(autoincrement())
+  categoryId  Int
+  category    ExpenseCategory  @relation(fields: [categoryId], references: [id], onDelete: Restrict)
+  employeeId  Int
+  employee    Employee         @relation(fields: [employeeId], references: [id], onDelete: Restrict)
+  amount      Decimal          @db.Decimal(18, 2)
+  date        DateTime         @default(now())
+  description String
+  deletedAt   DateTime?
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt
+
+  @@index([date])
+  @@index([categoryId, date])
+  @@index([employeeId, date])
+  @@index([deletedAt])
+}
+
+model Notification {
+  id         Int              @id @default(autoincrement())
+  employeeId Int
+  employee   Employee         @relation(fields: [employeeId], references: [id], onDelete: Restrict)
+  type       NotificationType
+  title      String
+  message    String
+  payload    Json?
+  entityType String?
+  entityId   String?
+  dedupeKey  String?
+  isRead     Boolean          @default(false)
+  resolvedAt DateTime?
+  createdAt  DateTime         @default(now())
+
+  @@index([employeeId, isRead, createdAt])
+  @@index([type, resolvedAt])
+  @@index([dedupeKey])
+  @@unique([employeeId, dedupeKey])
+}
+
+model IdempotencyKey {
+  id             Int      @id @default(autoincrement())
+  key            String   @unique
+  employeeId     Int
+  employee       Employee @relation(fields: [employeeId], references: [id], onDelete: Restrict)
+  operation      String
+  responseStatus Int?
+  responseBody   Json?
+  createdAt      DateTime @default(now())
+  expiresAt      DateTime
+
+  @@index([employeeId, operation, createdAt])
+  @@index([expiresAt])
+}
+
+model InvoiceSequence {
+  id            Int @id
+  currentNumber Int @default(0)
+}
+
+model AppSetting {
+  id           Int      @id @default(1)
+  businessName String
+  address      String?
+  phone        String?
+  logoUrl      String?
+  currency     String   @default("EGP")
+  timezone     String   @default("Africa/Cairo")
+  invoicePrefix String  @default("INV")
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
