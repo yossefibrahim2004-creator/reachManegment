@@ -6,6 +6,7 @@ import { notify } from "../../lib/notify";
 import { getFriendlyErrorMessage } from "../../lib/messages";
 import { getSuccessMessages } from "../../lib/success-messages";
 import { useI18n } from "../../i18n/context";
+import { useAuth } from "../../lib/auth";
 import { Button } from "../../components/ui/Button";
 import { Input } from "../../components/ui/Input";
 import { Select } from "../../components/ui/Select";
@@ -52,7 +53,13 @@ export default function NewChangeRequest() {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const { t } = useI18n();
+  const { user } = useAuth();
   const SUCCESS_MESSAGES = getSuccessMessages(t);
+
+  const isAdmin = user?.role === "ADMIN";
+  const requestsPath = isAdmin ? "/admin/change-requests" : "/sales/my-requests";
+  const changeRequestBase = isAdmin ? "/admin/change-request" : "/sales/change-request";
+  const invoicesPath = isAdmin ? "/admin/invoices" : "/sales/invoice-search";
 
   const [invoice, setInvoice] = useState<Invoice | null>(null);
   const [invoices, setInvoices] = useState<Invoice[]>([]);
@@ -254,7 +261,7 @@ export default function NewChangeRequest() {
         items,
       });
       notify.success(SUCCESS_MESSAGES.changeRequest.submitted);
-      navigate("/sales/my-requests");
+      navigate(requestsPath);
     } catch (err) {
       setError(getFriendlyErrorMessage(err, t));
       notify.error(getFriendlyErrorMessage(err, t));
@@ -294,10 +301,10 @@ export default function NewChangeRequest() {
               placeholder={t.changeRequestForm.selectInvoicePlaceholder}
               onChange={(event) => {
                 const value = event.target.value;
-                if (value) navigate(`/sales/change-request/${value}`);
+                if (value) navigate(`${changeRequestBase}/${value}`);
               }}
             />
-            <Button variant="secondary" onClick={() => navigate("/sales/my-requests")}>
+            <Button variant="secondary" onClick={() => navigate(requestsPath)}>
               {t.back}
             </Button>
           </div>
@@ -311,7 +318,7 @@ export default function NewChangeRequest() {
       <div>
         <PageHeader title={t.changeRequestForm.title} subtitle={t.changeRequestForm.subtitle} />
         <p style={{ color: "var(--soft)" }}>{t.invoices.invoiceNotFound}</p>
-        <Button variant="secondary" onClick={() => navigate("/sales/invoice-search")}>
+        <Button variant="secondary" onClick={() => navigate(invoicesPath)}>
           {t.invoices.backToSearch}
         </Button>
       </div>
@@ -547,7 +554,7 @@ export default function NewChangeRequest() {
           <Button onClick={handleSubmit} disabled={submitting || rows.length === 0}>
             {submitting ? t.changeRequestForm.submitting : t.changeRequestForm.submit}
           </Button>
-          <Button variant="secondary" onClick={() => navigate("/sales/my-requests")}>
+          <Button variant="secondary" onClick={() => navigate(requestsPath)}>
             {t.cancel}
           </Button>
         </div>

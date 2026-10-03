@@ -19,7 +19,7 @@ export class InvoiceChangeRequestsController {
   constructor(private invoiceChangeRequestsService: InvoiceChangeRequestsService) {}
 
   @Post('invoices/:id/change-requests')
-  @Roles(Role.SALES, Role.INVENTORY)
+  @Roles(Role.ADMIN, Role.SALES, Role.INVENTORY)
   @ApiOperation({ summary: 'Create invoice change request' })
   async create(
     @Request() req: RequestWithUser,

@@ -204,6 +204,27 @@ export default function AdminInvoiceDetail() {
           </div>
 
           <div className="invoice-actions">
+            {invoice.status === "CONFIRMED" || invoice.status === "DELIVERED" ? (
+              <>
+                <Button
+                  variant="secondary"
+                  onClick={() =>
+                    navigate(`/admin/change-request/${invoice.id}?type=EDIT`)
+                  }
+                >
+                  {t.invoices.requestEdit}
+                </Button>
+                <Button
+                  variant="secondary"
+                  onClick={() =>
+                    navigate(`/admin/change-request/${invoice.id}?type=RETURN`)
+                  }
+                >
+                  {t.invoices.requestReturn}
+                </Button>
+              </>
+            ) : null}
+
             {invoice.status === "PENDING_ACCOUNTANT" && (
               <>
                 <Button

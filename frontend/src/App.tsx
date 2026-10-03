@@ -207,6 +207,8 @@ export default function App() {
                   <Routes>
                     <Route path="notifications" element={<AdminNotifications />} />
                     <Route path="change-requests" element={<AdminChangeRequests />} />
+                    <Route path="change-request" element={<NewChangeRequest />} />
+                    <Route path="change-request/:invoiceId" element={<NewChangeRequest />} />
                     <Route path="invoices" element={<AdminInvoices />} />
                     <Route path="new-invoice" element={<NewInvoice />} />
                     <Route path="invoices/:id" element={<AdminInvoiceDetail />} />
